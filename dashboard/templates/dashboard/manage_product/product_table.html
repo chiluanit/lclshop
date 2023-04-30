@@ -1,0 +1,375 @@
+{% extends "dashboard/base/ad_base.html" %}
+
+{% block title %}Product Management{% endblock %}
+{% block style %}
+    <style>
+        .rating .fa {
+            color: #ffd513;
+            cursor: pointer;
+            margin: 0 2px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        @media only screen and (min-width: 1048px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 1047px) and (min-width: 768px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 5px;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 767px) and (min-width: 480px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 0px;
+                width: 100%;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media only screen and (max-width: 479px) {
+            .filter-form li {
+                display: inline-block;
+                margin-right: 0px;
+                width: 100%;
+            }
+
+            .filter-form .form-row .col-auto .btn {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+
+{% block content %}
+    <h1 class="h2 mb-2 text-black-800 title-manage">Product Management</h1>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/product/">Product Management</a>
+    </div>
+    {# Searchbox bar right here#}
+    <div class="search-form">
+        <form action="/dashboard/product/search/" method="POST">
+            {% csrf_token %}
+            <div class="input-group search-manage">
+                <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
+                       aria-label="Search" aria-describedby="basic-addon2" name="search"
+                       {% if search_query %}value="{{ search_query }}"{% endif %}>
+                <input type="hidden" name="t" value="{{ timestamp }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-search fa-sm"></i>
+                    </button>
+                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/product/">
+                        <i class="fa fa-times fa-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="filter-form">
+        <form action="/dashboard/product/search/" method="POST">
+            {% csrf_token %}
+            <div class="form-row align-items-center">
+                <ul>
+                    <li>
+                        <div class="col-auto">
+                            <label class="sr-only" for="sort_by">Sort by</label>
+                            <select class="form-control" id="sort_by" name="sort_by">
+                                <option value="">Sort by</option>
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
+                                </option>
+                                <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
+                                    Best Seller
+                                </option>
+                                <option value="most_viewed" {% if sort_by == 'most_viewed' %}selected{% endif %}>
+                                    Most Viewed
+                                </option>
+                                <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
+                                    (A-Z)
+                                </option>
+                                <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name
+                                    (Z-A)
+                                </option>
+                                <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price
+                                    (low to high)
+                                </option>
+                                <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price
+                                    (high to low)
+                                </option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" id="filter_by_brand" name="filter_by_brand">
+                                <option value="">Filter by Brand</option>
+                                {% for brand in brands %}
+                                    <option value="{{ brand.id }}"
+                                            {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <select class="form-control" id="filter_by_category" name="filter_by_category">
+                                <option value="">Filter by Category</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}"
+                                            {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <label class="sr-only" for="sort_by">Price</label>
+                            <select class="form-control" id="sort_price" name="sort_price">
+                                <option value="">Filter by Price</option>
+                                <option value="less_100" {% if sort_price == 'less_100' %}selected{% endif %}>
+                                    Less than $100
+                                </option>
+                                <option value="100_500" {% if sort_price == '100_500' %}selected{% endif %}>
+                                    $100 - $500
+                                </option>
+                                <option value="500_1000" {% if sort_price == '500_1000' %}selected{% endif %}>$500 -
+                                    $1000
+                                </option>
+                                <option value="1000_2000" {% if sort_price == '1000_2000' %}selected{% endif %}>
+                                    $1000 - $2000
+                                </option>
+                                <option value="greater_2000"
+                                        {% if sort_price == 'greater_2000' %}selected{% endif %}>
+                                    Greater than $2000
+                                </option>
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="col-auto">
+                            <a href="/dashboard/product/search/" type="button" class="btn btn-danger">Clear</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <input type="hidden" name="search" value="{{ request.GET.search }}">
+            <input type="hidden" name="t" value="{{ timestamp }}">
+        </form>
+    </div>
+    {# End of searchbox bar#}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a type="button" class="btn btn-primary btn-md float-right btn-block" href="/dashboard/product/add/"
+               title="Add New"><img
+                    src="{% static 'dashboard/images/icons/add.png' %}" class="add-icon" alt="Add New"
+                    title="Add New"> Add New
+            </a>
+            <form id="delete-form" method="post" action="/dashboard/product/delete_selected/">
+                {% csrf_token %}
+                <button type="button" id="delete-selected" class="btn btn-danger btn-md float-right btn-block"
+                        title="Delete Selected" name="delete_selected" data-submit-form><img
+                        src="{% static 'dashboard/images/icons/trash.png' %}" class="add-icon" alt="Delete Selected"
+                        title="Delete Selected">Delete Selected
+                </button>
+            </form>
+            <button type="button" class="btn btn-success btn-md float-right btn-block dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><img
+                    src="{% static 'dashboard/images/icons/export.png' %}" class="add-icon" alt="Export Data"
+                    title="Export Data">
+                Export Data
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/dashboard/product/export/csv/">Export to CSV</a>
+                <a class="dropdown-item" href="/dashboard/product/export/excel/">Export to Excel</a>
+                <a class="dropdown-item" href="/dashboard/product/export/json/">Export to JSON</a>
+            </div>
+        </div>
+        {% if products %}
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-auto table-style">
+                        <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select-all"></th>
+                            <th scope="col">No.</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Price Original</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Old Price</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col">Sold</th>
+                            <th scope="col">Profit</th>
+                            <th scope="col">Review</th>
+                            <th scope="col">Views</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td><input type="checkbox" class="select-checkbox" name="selected_product"
+                                           value="{{ product.id }}"></td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>
+                                    <div class="main-image-table">
+                                        {% if product.product_image %}
+                                            <img src="{{ MEDIA_URL }}{{ product.product_image.url }}"
+                                                 alt="Product Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Product image of {{ product.name }}"/>
+                                        {% else %}
+                                            <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                 alt="Default Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Default Image"/>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.brand }}</td>
+                                <td><strong class="money">${{ product.price_original }}</strong></td>
+                                <td><strong class="money">${{ product.price }}</strong></td>
+                                <td><strong class="money-old">${{ product.old_price }}</strong></td>
+                                <td>{{ product.stock }}</td>
+                                <td>{{ product.sold }}</td>
+                                <td><strong class="money">${{ product.profit }}</strong></td>
+                                <td style="white-space: nowrap;">{{ product.review_count }} Reviews <br> ({{ product.review_rate_average }}/5.0<span
+                                        class="rating"><i class="fa fa-star" aria-hidden="true"></i></span>)
+                                </td>
+                                <td>{{ product.view_count }}</td>
+                                <td class="action">
+                                    <a href="/dashboard/product/details/{{ product.id }}/"><img
+                                            src="{% static 'dashboard/images/icons/detail.png' %}"
+                                            alt="Details"
+                                            title="Details"></a>
+                                    <a href="/dashboard/product/update/{{ product.id }}/"><img
+                                            src="{% static 'dashboard/images/icons/edit.png' %}"
+                                            alt="Edit"
+                                            title="Edit"></a>
+                                    <a href="/dashboard/product/delete/{{ product.id }}/"
+                                       onclick="return confirm('Are you sure?')"><img
+                                            src="{% static 'dashboard/images/icons/delete.png' %}"
+                                            alt="Delete"
+                                            title="Delete"></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'dashboard/manage_product/pagination.html' %}
+            </div>
+        {% else %}
+            {% include 'dashboard/manage_product/404.html' %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Delete selected function
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the form and the delete selected button
+            let form = document.getElementById("delete-form");
+            let deleteBtn = document.querySelector("[data-submit-form]");
+            let selectAllCheckbox = document.getElementById("select-all");
+
+            // Listen for the click event on the delete selected button
+            deleteBtn.addEventListener("click", function (event) {
+                // Get the selected checkboxes
+                let checkboxes = document.querySelectorAll(".select-checkbox:checked");
+                // If no checkboxes are selected, prevent the form submission
+                if (checkboxes.length === 0) {
+                    event.preventDefault();
+                    alert("Please select at least one product to delete.");
+                } else {
+                    // Show confirm dialog and proceed only if OK is clicked
+                    let confirmed = confirm('Are you sure to delete this selected?');
+                    if (confirmed) {
+                        // Update the action attribute of the form
+                        let Ids = Array.from(checkboxes).map(function (checkbox) {
+                            return checkbox.value;
+                        });
+                        form.action = "/dashboard/product/delete_selected/" + Ids.join("+") + "/";
+                        // Submit the form
+                        form.submit();
+                    }
+                }
+            });
+
+            // Listen for the click event on the select-all checkbox
+            selectAllCheckbox.addEventListener("click", function () {
+                // Get all the object checkboxes
+                let objectCheckboxesAll = document.querySelectorAll(".select-checkbox");
+                // Set their checked property based on the select-all checkbox
+                objectCheckboxesAll.forEach(function (checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+                // Update the action attribute of the form
+                let Ids = Array.from(objectCheckboxesAll)
+                    .filter(function (checkbox) {
+                        return checkbox.checked;
+                    })
+                    .map(function (checkbox) {
+                        return checkbox.value;
+                    });
+                form.action = "/dashboard/product/delete_selected/" + Ids.join("+") + "/";
+            });
+        });
+    </script>
+{% endblock %}

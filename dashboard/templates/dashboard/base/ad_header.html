@@ -1,0 +1,120 @@
+{% block style %}
+
+{% endblock %}
+{% block content %}
+    <div class="dashboard-container">
+        <div class="navigation scrollable">
+            <ul>
+                <li>
+                    <a href="/dashboard/">
+                        <span class="icon">{% load static %}<img
+                                src="{% static 'dashboard/images/dashboard/logolclshop.png' %}" alt="LCL SHOP"></span>
+                        <span class="title name-shop"><h2>LCL SHOP</h2></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/">
+                        <span class="icon"><i class="fa fa-home" aria-hidden="true"></i></span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/customer/">
+                        <span class="icon"><i class="fa fa-users" aria-hidden="true"></i></span>
+                        <span class="title">Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/category/">
+                        <span class="icon"><i class="fa fa-list" aria-hidden="true"></i></span>
+                        <span class="title">Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/brand/">
+                        <span class="icon"><i class="fa fa-apple" aria-hidden="true"></i></span>
+                        <span class="title">Brands</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/product/">
+                        <span class="icon"><i class="fa fa-desktop" aria-hidden="true"></i></span>
+                        <span class="title">Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/order/">
+                        <span class="icon"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span>
+                        <span class="title">Orders</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/payment/">
+                        <span class="icon"><i class="fa fa-credit-card" aria-hidden="true"></i></span>
+                        <span class="title">Payments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/review/">
+                        <span class="icon"><i class="fa fa-star" aria-hidden="true"></i></span>
+                        <span class="title">Reviews</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/coupon/">
+                        <span class="icon"><i class="fa fa-qrcode" aria-hidden="true"></i></span>
+                        <span class="title">Coupons</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/feedback/">
+                        <span class="icon"><i class="fa fa-comment" aria-hidden="true"></i></span>
+                        <span class="title">Feedbacks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/sales_statistics/">
+                        <span class="icon"><i class="fa fa-bar-chart" aria-hidden="true"></i></span>
+                        <span class="title">Sales Statistics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/chatbot/" title="Chatbot Dialogflow">
+                        <span class="icon"><i class="fa fa-github-alt" aria-hidden="true"></i></span>
+                        <span class="title">Chatbot</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/lclshop/" target="_blank">
+                        <span class="icon"><i class="fa fa-tachometer" aria-hidden="true"></i></span>
+                        <span class="title">Django Admin</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/" target="_blank">
+                        <span class="icon"><i class="fa fa-laptop" aria-hidden="true"></i></span>
+                        <span class="title">View Site</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/change_password/">
+                        <span class="icon"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                        <span class="title">Change Password</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/dashboard/logout/">
+                        <span class="icon"><i class="fa fa-sign-out" aria-hidden="true"></i></span>
+                        <span class="title">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

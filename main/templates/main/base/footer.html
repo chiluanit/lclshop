@@ -1,0 +1,407 @@
+<button onclick="topFunction()" id="myBtn" title="Go to top"
+        class="button-scroll"><i class="fa fa-arrow-up" aria-hidden="true"></i>
+</button>
+<script>
+    scollButton = document.getElementById("myBtn");
+
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+        scrollFunction()
+    };
+
+    function scrollFunction() {
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scollButton.style.display = "block";
+        } else {
+            scollButton.style.display = "none";
+        }
+    }
+
+    function topFunction() {
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        if (scrollTop > 0) {
+            window.requestAnimationFrame(topFunction);
+            window.scrollTo(0, scrollTop - scrollTop / 8);
+        }
+    }
+</script>
+<!-- Site footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="newsletter-form">
+            <h3>Register for Our Newsletter</h3>
+            <form action="/customer/send_email_newsletter/" method="post">
+                <div>
+                    {% csrf_token %}
+                    <label for="email"></label>
+                    <input type="email" placeholder="Enter your email" required name="email" id="email">
+                    <button type="submit">Subscribe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <h6>About Us</h6>
+                <p class="text-justify">LCL Shop is a website that sells all kinds of technology products. We have a
+                    wide
+                    range of products from the most popular brands in the world. We are always committed to bringing the
+                    best
+                    products to our customers.</p>
+                <h6>Contact Us</h6>
+                <div class="footer-contact-us">
+                    <i class="fa fa-map"></i><a href="https://goo.gl/maps/c4nD1ySUwRSHPq9q6" target="_blank"> Old Royal
+                    Naval College, Park Row, London, United Kingdom</a> <br>
+                    <i class="fa fa-phone"></i><a href="tel:+84386363677"> +84 386 363 677</a><br>
+                    <i class="fa fa-envelope"></i><a href="mailto:lclshop.dev@gmail.com" target="_blank">
+                    lclshop.dev@gmail.com</a>
+                </div>
+                <h6>We accept payment: </h6>
+                <div class="payments">
+                    {% load static %}<img src="{% static 'main/images/payments/bank-transfer.png' %}"
+                                          alt="Bank Transfer"
+                                          title="Bank Transfer" class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/cache.png' %}" alt="Cash On Delivery"
+                                          title="Cash On Delivery" class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/card.png' %}" alt="Card" title="Card"
+                                          class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/paypal.png' %}" alt="Paypal"
+                                          title="Paypal"
+                                          class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/visa.png' %}" alt="Visa" title="Visa"
+                                          class="img-payment-icon">
+                    {% load static %}<img src="{% static 'main/images/payments/mastercard.png' %}" alt="Mastercard"
+                                          title="Mastercard" class="img-payment-icon">
+                </div>
+            </div>
+
+            <div class="col-xs-6 col-md-2">
+                <h6>Categories</h6>
+                <ul class="footer-links">
+                    {% for category in categories %}
+                        <li><a href="/customer/product/category/{{ category.slug }}/">{{ category.name }}</a></li>
+                    {% endfor %}
+                    <li><a href="/customer/product/category/all/">All Products</a></li>
+                </ul>
+            </div>
+
+            <div class="col-xs-6 col-md-2">
+                <h6>Brands</h6>
+                <ul class="footer-links">
+                    {% for brand in brands %}
+                        <li><a href="/customer/product/category/{{ brand.slug }}/">{{ brand.name }}</a></li>
+                    {% endfor %}
+                    <li><a href="/customer/product/brand/all/">All Products</a></li>
+                </ul>
+            </div>
+            <div class="col-xs-6 col-md-2">
+                <h6>Services</h6>
+                <ul class="footer-links">
+                    <li><a href="/auth/terms_and_conditions/">Terms and Condition</a></li>
+                    <li><a href="/auth/privacy_policy/">Privacy Policy</a></li>
+                    <li><a href="/customer/about/">About Us</a></li>
+                    <li><a href="/customer/feedback/">Feedback</a></li>
+                    <li><a href="#">Sitemap</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+                <p class="copyright-text">Copyright &copy; {% now "Y" %} All Rights Reserved by
+                    <a href="#">LCL Shop</a>. Developed by <a href="https://www.github.com/lechiluan/"
+                                                              target="_blank">Le Chi Luan <img
+                            src="{% static 'dashboard/images/icons/check-icon.png' %}"
+                            style="width:18px;height:18px;"></a>
+                </p>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <ul class="social-icons">
+                    <li><a class="facebook" href="https://facebook.com/chiluanit" target="_blank"><i
+                            class="fa fa-facebook"></i></a></li>
+                    <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+                    <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
+                    <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+<style>
+    .newsletter-form {
+        text-align: center;
+        margin: 10px auto;
+        background-color: #343a40;
+        padding-bottom: 20px;
+    }
+
+    .newsletter-form h3 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .newsletter-form form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding-top: 10px;
+    }
+
+    .newsletter-form input[type="email"] {
+        width: 300px;
+        height: 40px;
+        margin-right: 10px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .newsletter-form button[type="submit"] {
+        height: 40px;
+        padding: 0 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1253cc;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .newsletter-form button[type="submit"]:hover {
+        background-color: #0062cc;
+        border-color: #0062cc;
+    }
+
+    @media (max-width: 480px) {
+
+        .newsletter-form input[type="email"] {
+            width: 100%;
+        }
+
+        .newsletter-form button[type="submit"] {
+            width: 100%;
+        }
+
+        .newsletter-form form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .newsletter-form form input[type="email"] {
+            margin-bottom: 10px;
+        }
+    }
+
+    .footer-contact-us {
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+
+    .footer-contact-us i {
+        margin-right: 10px;
+    }
+
+    .footer-contact-us a {
+        color: #333;
+        text-decoration: none;
+    }
+
+
+    .payments {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .img-payment-icon {
+        width: 60px;
+        height: 35px;
+        object-fit: contain;
+        background-color: white;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+        border-radius: 5px;
+    }
+
+    .img-payment-icon:hover {
+        transform: scale(1.2);
+    }
+
+    /* Footer CSS */
+    .site-footer {
+        background-color: #343a40;
+        padding: 20px 0 20px;
+        font-size: 15px;
+        line-height: 24px;
+        color: #dcc9c9;
+    }
+
+    .site-footer hr {
+        border-top-color: #bbb;
+        opacity: 0.5
+    }
+
+    .site-footer hr.small {
+        margin: 20px 0
+    }
+
+    .site-footer h6 {
+        color: #fff;
+        font-size: 17px;
+        text-transform: uppercase;
+        margin-top: 5px;
+        letter-spacing: 2px
+    }
+
+    .site-footer a {
+        color: #dcc9c9;
+    }
+
+    .site-footer a:hover {
+        color: #1253cc;
+        text-decoration: none;
+    }
+
+    .footer-links {
+        padding-left: 0;
+        list-style: none
+    }
+
+    .footer-links li {
+        display: block
+    }
+
+    .footer-links a {
+        color: #dcc9c9
+    }
+
+    .footer-links a:active, .footer-links a:focus, .footer-links a:hover {
+        color: #1253cc;
+        text-decoration: none;
+    }
+
+    .footer-links.inline li {
+        display: inline-block
+    }
+
+    .site-footer .social-icons {
+        text-align: right
+    }
+
+    .site-footer .social-icons a {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        margin-left: 6px;
+        margin-right: 0;
+        border-radius: 100%;
+        background-color: #33353d
+    }
+
+    .copyright-text {
+        margin: 0
+    }
+
+    @media (max-width: 991px) {
+        .site-footer [class^=col-] {
+            margin-bottom: 30px
+        }
+    }
+
+    @media (max-width: 767px) {
+        .site-footer {
+            padding-bottom: 0
+        }
+
+        .site-footer .copyright-text, .site-footer .social-icons {
+            text-align: center
+        }
+    }
+
+    .social-icons {
+        padding-left: 0;
+        margin-bottom: 0;
+        list-style: none
+    }
+
+    .social-icons li {
+        display: inline-block;
+        margin-bottom: 4px
+    }
+
+    .social-icons li.title {
+        margin-right: 15px;
+        text-transform: uppercase;
+        color: #96a2b2;
+        font-weight: 700;
+        font-size: 13px
+    }
+
+    .social-icons a {
+        background-color: #eceeef;
+        color: #818a91;
+        font-size: 16px;
+        display: inline-block;
+        line-height: 44px;
+        width: 44px;
+        height: 44px;
+        text-align: center;
+        margin-right: 8px;
+        border-radius: 100%;
+        -webkit-transition: all .2s linear;
+        -o-transition: all .2s linear;
+        transition: all .2s linear
+    }
+
+    .social-icons a:active, .social-icons a:focus, .social-icons a:hover {
+        color: #fff;
+        background-color: #29aafe
+    }
+
+    .social-icons.size-sm a {
+        line-height: 34px;
+        height: 34px;
+        width: 34px;
+        font-size: 14px
+    }
+
+    .social-icons a.facebook:hover {
+        background-color: #3b5998
+    }
+
+    .social-icons a.twitter:hover {
+        background-color: #00aced
+    }
+
+    .social-icons a.linkedin:hover {
+        background-color: #007bb6
+    }
+
+    .social-icons a.dribbble:hover {
+        background-color: #ea4c89
+    }
+
+    @media (max-width: 767px) {
+        .social-icons li.title {
+            display: block;
+            margin-right: 0;
+            font-weight: 600
+        }
+    }
+</style>

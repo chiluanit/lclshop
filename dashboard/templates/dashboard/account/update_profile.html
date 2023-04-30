@@ -1,0 +1,59 @@
+{% extends "dashboard/base/ad_base.html" %}
+{% block title %}Profile{% endblock %}
+{% block style %}
+    <style>
+
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/profile/">Update Profile</a>
+    </div>
+    <div class="form-main">
+        <h2 class="font-weight-bold mt-3 form-title">Update Profile</h2>
+        <form method="POST" class="form-group" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h5 class="card-title">Your Image:</h5>
+            <div class="img-details">
+                <img class="img-display" src="{{ MEDIA_URL }}{{ user.customer.customer_image.url }}"
+                     alt="{{ customer.user.username }}" title="Customer Image of {{ customer.user.username }}">
+            </div>
+            <div class="form-input">
+                {{ form.username|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.email|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.first_name|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.last_name|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.mobile|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.address|as_crispy_field }}
+            </div>
+            <div class="form-input">
+                {{ form.customer_image|as_crispy_field }}
+            </div>
+            <div class="btn-form">
+                <div class="btn-form-left">
+                    <a type="button" class="btn btn-dark btn-block" href="/dashboard/brand/">Back</a>
+                    <button type="submit" class="btn btn-success btn-block">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+
+{% endblock %}

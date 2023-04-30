@@ -1,0 +1,324 @@
+{% block style %}
+    <style>
+        .slides-show-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            margin: 0 auto;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .slides-show-container .container {
+            margin: 0;
+            padding: 0;
+        }
+
+        .slides-show-image {
+            max-height: 100%;
+            max-width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .slides-show-image a img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    </style>
+{% endblock %}
+{% load static %}
+{% block content %}
+    {% load static %}
+    <div class="slides-show-container">
+        <div class="container">
+            <div id="demo" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ul class="carousel-indicators">
+                    <li data-target="#demo" data-slide-to="0" class="active"></li>
+                    <li data-target="#demo" data-slide-to="1"></li>
+                    <li data-target="#demo" data-slide-to="2"></li>
+                </ul>
+
+                <!-- The slideshow -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="slides-show-image">
+                            <a href="#product">
+                                <img src="{% static 'main/images/main/homepage.png' %}" height="100%" width="100%"
+                                     alt="Home Image"></a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="slides-show-image">
+                            <a href="#product">
+                                <img src="{% static 'main/images/main/homepage.png' %}" height="100%" width="100%"
+                                     alt="Home Image">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="slides-show-image">
+                            <a href="#product">
+                                <img src="{% static 'main/images/main/homepage.png' %}" height="100%" width="100%"
+                                     alt="Home Image">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </a>
+                <a class="carousel-control-next" href="#demo" data-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </a>
+
+            </div>
+        </div>
+    </div>
+    <div class="homepage" id="product">
+        {# Searchbox bar right here#}
+        <div class="search-form">
+            <form action="/customer/product/search/" method="POST">
+                {% csrf_token %}
+                <div class="input-group search-manage">
+                    <input type="text" class="form-control border-0 small search-manage-input"
+                           placeholder="Search for Product ..."
+                           aria-label="Search" aria-describedby="basic-addon2" name="search"
+                           {% if search_query %}value="{{ search_query }}"{% endif %}>
+                    <input type="hidden" name="t" value="{{ timestamp }}">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search fa-sm"></i>
+                        </button>
+                        <a type="button" class="btn btn-danger" id="clear-btn" href="/">
+                            <i class="fa fa-times fa-sm"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {# End of searchbox bar #}
+        {# Sort by bar right here#}
+        <div class="filter-form">
+            <form action="/customer/product/search/" method="POST">
+                {% csrf_token %}
+                <div class="form-row align-items-center">
+                    <ul>
+                        <li>
+                            <div class="col-auto">
+                                <label class="sr-only" for="sort_by">Sort by</label>
+                                <select class="form-control" id="sort_by" name="sort_by">
+                                    <option value="">Sort by</option>
+                                    <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest
+                                    </option>
+                                    <option value="best_seller" {% if sort_by == 'best_seller' %}selected{% endif %}>
+                                        Best Seller
+                                    </option>
+                                    <option value="most_viewed" {% if sort_by == 'most_viewed' %}selected{% endif %}>
+                                        Most Viewed
+                                    </option>
+                                    <option value="name_asc" {% if sort_by == 'name_asc' %}selected{% endif %}>Name
+                                        (A-Z)
+                                    </option>
+                                    <option value="name_desc" {% if sort_by == 'name_desc' %}selected{% endif %}>Name
+                                        (Z-A)
+                                    </option>
+                                    <option value="price_asc" {% if sort_by == 'price_asc' %}selected{% endif %}>Price
+                                        (low to high)
+                                    </option>
+                                    <option value="price_desc" {% if sort_by == 'price_desc' %}selected{% endif %}>Price
+                                        (high to low)
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <select class="form-control" id="filter_by_brand" name="filter_by_brand">
+                                    <option value="">Filter by Brand</option>
+                                    {% for brand in brands %}
+                                        <option value="{{ brand.id }}"
+                                                {% if filter_by_brand == brand.id %}selected{% endif %}>{{ brand.name }}({{ brand.get_products_count }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <select class="form-control" id="filter_by_category" name="filter_by_category">
+                                    <option value="">Filter by Category</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.id }}"
+                                                {% if filter_by_category == category.id %}selected{% endif %}>{{ category.name }}({{ category.get_products_count }})
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <label class="sr-only" for="sort_by">Price</label>
+                                <select class="form-control" id="sort_price" name="sort_price">
+                                    <option value="">Filter by Price</option>
+                                    <option value="less_100" {% if sort_price == 'less_100' %}selected{% endif %}>
+                                        Less than $100
+                                    </option>
+                                    <option value="100_500" {% if sort_price == '100_500' %}selected{% endif %}>
+                                        $100 - $500
+                                    </option>
+                                    <option value="500_1000" {% if sort_price == '500_1000' %}selected{% endif %}>$500 -
+                                        $1000
+                                    </option>
+                                    <option value="1000_2000" {% if sort_price == '1000_2000' %}selected{% endif %}>
+                                        $1000 - $2000
+                                    </option>
+                                    <option value="greater_2000"
+                                            {% if sort_price == 'greater_2000' %}selected{% endif %}>
+                                        Greater than $2000
+                                    </option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="col-auto">
+                                <a href="/customer/product/search/" type="button" class="btn btn-danger">Clear</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <input type="hidden" name="search" value="{{ request.GET.search }}">
+                <input type="hidden" name="t" value="{{ timestamp }}">
+            </form>
+        </div>
+        {# End of Sort by bar #}
+        {% include 'main/base/best_selling_products.html' %}
+        {% include 'main/base/recommended_products.html' %}
+        {# Product Card #}
+        <div class="product-card">
+            <div class="card-header">
+                <h2>Our Products</h2>
+            </div>
+            {# Product Categories #}
+            <div class="card-categories">
+                <ul>
+                    {% for category in categories %}
+                        <li><a href="/customer/product/category/{{ category.slug }}/">{{ category.name }}
+                            ({{ category.get_products_count }})</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {# End of Product Categories #}
+            {# Product Card #}
+            <div class="card-main">
+                <div class="container">
+                    {% for product in products %}
+                        <div class="card">
+                            <div class="imgBx">
+                                <img src="{{ MEDIA_URL }}{{ product.product_image.url }}" alt="Product Image 1">
+                                <ul class="action">
+                                    <li>
+                                        <a href="/customer/add_to_wishlist/{{ product.slug }}/">
+                                            <i class="fa fa-heart" aria-hidden="true"></i></a>
+                                        <span>Add to WishList</span>
+                                    </li>
+                                    <li>
+                                        <a href="/customer/add_to_cart/{{ product.slug }}/">
+                                            <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                                        <span>Add to Cart</span>
+                                    </li>
+                                    <li>
+                                        <a href="/customer/product/details/{{ product.slug }}/">
+                                            <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                        <span>View Details</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="content">
+                                <div class="rating">
+                                    {% if product.review_rate_average >= 1.0 and product.review_rate_average < 2.0 %}
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    {% elif product.review_rate_average >= 2.0 and product.review_rate_average < 3.0 %}
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    {% elif product.review_rate_average >= 3.0 and product.review_rate_average < 4.0 %}
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    {% elif product.review_rate_average >= 4.0 and product.review_rate_average < 5.0 %}
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star grey" aria-hidden="true"></i>
+                                    {% elif product.review_rate_average == 5.0 %}
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    {% else %}
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                        <i class="fa fa-star" aria-hidden="true"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="productName">
+                                    <h3>{{ product.name }}</h3>
+                                </div>
+                                <div class="price_rating">
+                                    <div class="price">
+                                        <h2>$ {{ product.price }}</h2>
+                                    </div>
+                                    <div class="old_price">
+                                        {% if product.old_price %}
+                                            <h2 class="old_price">$ {{ product.old_price }}</h2>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="container">
+                {% include 'main/base/pagination.html' %}
+            </div>
+        </div>
+        {# End of Product Card #}
+    </div>
+    {% include 'main/base/services.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+        const card = document.querySelector('.card-main');
+        card.addEventListener('touchstart', function () {
+            card.classList.add('hover');
+        });
+
+        card.addEventListener('touchend', function () {
+            card.classList.remove('hover');
+        });
+    </script>
+{% endblock %}

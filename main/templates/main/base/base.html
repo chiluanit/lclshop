@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %} LCL Shop {% endblock %}</title>
+    {% load static %}
+    <link rel="icon" type="image/x-icon" href="{% static "main/images/main/logolclshop.png" %}">
+
+    <!-- Font Awesome version 4.3.0-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet"
+          type='text/css'>
+    <script src="https://use.fontawesome.com/ac6bc7a8d0.js"></script>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'main/css/styles.css' %}">
+    {% block style %}
+        <!-- Custom CSS Here-->
+    {% endblock %}
+    {#    <script type="text/javascript">window.$crisp = [];#}
+    {#    window.CRISP_WEBSITE_ID = "1da3abc4-c88c-42b1-a9ab-852c00998bc4";#}
+    {#    (function () {#}
+    {#        d = document;#}
+    {#        s = d.createElement("script");#}
+    {#        s.src = "https://client.crisp.chat/l.js";#}
+    {#        s.async = 1;#}
+    {#        d.getElementsByTagName("head")[0].appendChild(s);#}
+    {#    })();</script>#}
+    <!-- Dialogflow -->
+    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+    <df-messenger
+            chat-icon="https:&#x2F;&#x2F;lh3.googleusercontent.com&#x2F;JDynAmRdxUZ4Px-Io0b8FLmIYTKNTuZMj2oHzZMWFa2CVw0u4V52lWLCTvqIOJ_o8r5M8nkgO97GWikngEFuGcEz7ohiHPk-oMzPWpr1B9FmXP8hDxHaPDcX4fOvMESI8yHUvbqOGhB1FuUxjAbxLRF0-f-O679na4VFS5WVHCooUlO-_Y_HYF6fQG-_QX2WDMw34Ew3qHPWA98aejfPi6-bBuxcvucl7bS1RdaM15EpJjS8c1dQKmUeQSAAnxAphfeBy_UBZWTho8cst62xXyKpOObsb2V_cSwdvtHY0FcBdvBh-H5MivS2K9RDordpycJdAKVi7E-JgaaXYm1wN-az00TUppC6tX_b60sWjt3-M_RpSWPsXugVJtlF-GYEu7R5fCCVkDZFBt9NVQqU7RoMkZQgqZJEn-tKHU3wg2uMH4FCc8829aI_A5bZw3Gc6I9OuX53ui-xIN6lYkEhxAET73l7omK3rBPigHzF3FbO2skYn5MZspTEJARSSKF1KSW0okypuSxx-s2zUJCOAx20tYopfpPqLhKKFfwdc2Cj83M2hrpSh6fhsYOKZ2nrtB0bNhQSN2PMlXKa0rQGx3yH6XRarpBGXabmWH5hdp1UZW4TgK_ESFbHiWPmMtPOAB_q6guzKmMR8r8K9J6iU8d7oPihPh82XuMV13VqiZ3oS-3A_WAX4g7BCaDBHRkyfnL5dDEN95gnKKg5pxrlGXMP1UWX2dlvZQpmk3F9vw34Tr2PlsDouwY6eyEmYMFX8mHjYZAtt2oh8iJr_YMQYmfZvPm6j8Qf1SBBhrichBsfXd1I5NZY9v8e0noTX02bs5mizZsirXlILjBZRfWIIY-OV-qS1hPzqONYvkQ2fsnn8KkW0ilhUkB36sucPaD8RRxjHiX8govMulyXy_uOcmH_iPhKS-ZuRn48DSvMjOiBLIC--KiLToCHjMq_fhMvprBowX16cgT0LSJ3NN5xoP_oOnKbZ-pCpVLepJR6VbpbLJ9bGpQcdflvz6v_KaUQwUv_hCqcxUC3WjB9F4auF7ANJhqPqmzRzu0z7h7UaaYi3KZtrpHwBnnTgV42OkbxY2FGP6Ksn_9DGINCzzjAAuGygfbxGYhFqkNPJoJ4IqL7QkS3mcgEBtq6gyxP9fy2Zfa9=w500-h500-s-no?authuser=0"
+            intent="WELCOME"
+            chat-title="LCLShop"
+            agent-id="7461e607-656b-4851-b86c-2208460f74d2"
+            language-code="en"
+    ></df-messenger>
+</head>
+
+<body data-pace-options='{ "ajax": false }'>
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+{{ form.media }}
+
+{% include "main/base/header.html" %}
+
+<div class="body">
+    <div class="container">
+        {% include "main/base/message.html" %}
+        {% block content %}
+            {% include "main/base/home.html" %}
+        {% endblock %}
+    </div>
+</div>
+
+{% include "main/base/footer.html" %}
+<!-- Custom Javascript -->
+{% block scripts %}
+    <!-- Custom Javascript Here-->
+{% endblock %}
+
+<!-- Javascript Code-->
+{% load static %}
+<script src="{% static 'main/js/script.js' %}"></script>
+
+<!-- Javascript for Google reCAPTCHA -->
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer>
+</script>
+<!-- Include the Pace.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<!-- Set the theme and style of the progress bar -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/green/pace-theme-minimal.min.css"/>
+
+<!-- Javascript in bootstrap -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>

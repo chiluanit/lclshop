@@ -1,0 +1,145 @@
+{% extends "dashboard/base/ad_base.html" %}
+
+{% block title %}Payment Management{% endblock %}
+{% block style %}
+    <style>
+        .badge {
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+{% load static %}
+
+
+{% block content %}
+    <h1 class="h2 mb-2 text-black-800 title-manage">Payment Management</h1>
+    <div class="breadcrumb">
+        <a href="/dashboard/">Home</a>
+        <span> > </span>
+        <a href="/dashboard/payment/">Payment Management</a>
+    </div>
+    {# Searchbox bar right here#}
+    <div class="search-form">
+        <form action="/dashboard/payment/search/" method="post">
+            {% csrf_token %}
+            <div class="input-group search-manage">
+                <input type="text" class="form-control border-0 small search-manage-input" placeholder="Search for..."
+                       aria-label="Search" aria-describedby="basic-addon2" name="search"
+                       {% if search_query %}value="{{ search_query }}"{% endif %}>
+                <input type="hidden" name="t" value="{{ timestamp }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fa fa-search fa-sm"></i>
+                    </button>
+                    <a type="button" class="btn btn-danger" id="clear-btn" href="/dashboard/payment/">
+                        <i class="fa fa-times fa-sm"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+    {# End of searchbox bar#}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <button type="button" class="btn btn-success btn-md float-right btn-block dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"><img
+                    src="{% static 'dashboard/images/icons/export.png' %}" class="add-icon" alt="Export Data"
+                    title="Export Data">
+                Export Data
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/dashboard/payment/export/csv/">Export to CSV</a>
+                <a class="dropdown-item" href="/dashboard/payment/export/excel/">Export to Excel</a>
+                <a class="dropdown-item" href="/dashboard/payment/export/json/">Export to JSON</a>
+            </div>
+        </div>
+        {% if payments %}
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-auto table-style">
+                        <thead>
+                        <tr>
+                            <th scope="col">No.</th>
+                            <th scope="col">ID</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Avatar</th>
+                            <th scope="col">Order ID</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col">Payment Total</th>
+                            <th scope="col">Transaction ID</th>
+                            <th scope="col">Payment Date</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for payment in payments %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ payment.id }}</td>
+                                <td>{{ payment.customer.user.username }}</td>
+                                <td>
+                                    <div class="main-image-table">
+                                        {% if payment.customer.customer_image %}
+                                            <img src="{{ MEDIA_URL }}{{ payment.customer.customer_image.url }}"
+                                                 alt="Product Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Avatar image of {{ payment.customer.user.username }}"/>
+                                        {% else %}
+                                            <img src="{% static 'dashboard/images/dashboard/default.jpg' %}"
+                                                 alt="Default Image"
+                                                 class="img-thumbnail image-table"
+                                                 title="Default Image"/>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>{{ payment.order.id }}</td>
+                                <td>{{ payment.payment_method }}</td>
+                                <td>
+                                    {% if payment.payment_status == 'Pending' %}
+                                        <span class="badge badge-warning">{{ payment.payment_status }}</span>
+                                    {% elif payment.payment_status == 'Paid' %}
+                                        <span class="badge badge-success">{{ payment.payment_status }}</span>
+                                    {% elif payment.payment_status == 'Due' %}
+                                        <span class="badge badge-danger">{{ payment.payment_status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td><strong class="money">${{ payment.total }}</strong></td>
+                                <td>{{ payment.transaction_id }}</td>
+                                <td>{{ payment.payment_date }}</td>
+                                <td class="action">
+                                    <a href="/dashboard/payment/details/{{ payment.id }}/"><img
+                                            src="{% static 'dashboard/images/icons/detail.png' %}"
+                                            alt="Details"
+                                            title="Details"></a>
+                                    <a href="/dashboard/payment/update_status/{{ payment.id }}/"><img
+                                            src="{% static 'dashboard/images/icons/edit.png' %}"
+                                            alt="Edit"
+                                            title="Edit"></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% include 'dashboard/manage_payment/pagination.html' %}
+            </div>
+        {% else %}
+            {% include 'dashboard/manage_payment/404.html' %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+
+    </script>
+{% endblock %}
